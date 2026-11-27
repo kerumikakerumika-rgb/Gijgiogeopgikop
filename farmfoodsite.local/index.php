@@ -1,0 +1,158 @@
+<?php
+session_start();
+$csrfToken = $_SESSION['csrf_token'] ?? bin2hex(random_bytes(32));
+$_SESSION['csrf_token'] = $csrfToken;
+?>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farm Food — фермерские продукты Астрахани</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Bootstrap 5.3.8: CSS framework (CDN, требуется интернет) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta name="csrf-token" content="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <a class="logo" href="#home" aria-label="Farm Food — главная">
+      <span class="logo-mark">🌱</span>
+      <span>farm<span class="logo-green">food</span><small>АСТРАХАНСКАЯ ФЕРМА</small></span>
+    </a>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="Открыть меню">☰</button>
+    <nav class="nav" id="nav">
+      <a class="active" href="#home">Главная</a>
+      <a href="#catalog">Каталог</a>
+      <a href="#about">О компании</a>
+      <a href="#contacts">Контакты</a>
+    </nav>
+    <div class="header-actions">
+      <?php if (!empty($_SESSION['user_id'])): ?>
+        <span class="welcome-user">Привет, <?= htmlspecialchars($_SESSION['user_name'] ?? 'пользователь', ENT_QUOTES, 'UTF-8') ?>!</span>
+        <button class="btn btn-light" id="logoutButton">Выйти</button>
+      <?php else: ?>
+        <button class="btn btn-light" data-open="loginModal">Войти</button>
+        <button class="btn btn-green" data-open="registerModal">Регистрация</button>
+      <?php endif; ?>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero-slider" id="home" aria-label="Галерея Farm Food">
+      <div class="slider-heading">
+        <span class="eyebrow">Farm Food • Астраханская область</span>
+        <h1>Свежесть <em>прямо с фермы</em></h1>
+        <p>Листайте фотографии наших продуктов и фермерских хозяйств</p>
+      </div>
+      <div class="slider-wrap">
+        <button class="slider-arrow prev" id="prevSlide" aria-label="Предыдущее изображение">‹</button>
+        <div class="slider-window">
+          <div class="slider-track" id="sliderTrack">
+            <article class="slide"><img src="images/slide-1.jpg" alt="Зелёные фермерские поля"><span>Наши поля</span></article>
+            <article class="slide"><img src="images/slide-2.jpg" alt="Свежие красные томаты"><span>Спелые томаты</span></article>
+            <article class="slide"><img src="images/slide-3.jpg" alt="Свежие огурцы на грядке"><span>Свежие овощи</span></article>
+            <article class="slide"><img src="images/slide-4.jpg" alt="Корзина свежих яблок"><span>Сочные фрукты</span></article>
+            <article class="slide"><img src="images/slide-5.jpg" alt="Молочные продукты"><span>Домашняя молочная продукция</span></article>
+            <article class="slide"><img src="images/slide-6.jpg" alt="Свежие ягоды"><span>Ягоды с фермы</span></article>
+          </div>
+        </div>
+        <button class="slider-arrow next" id="nextSlide" aria-label="Следующее изображение">›</button>
+      </div>
+      <div class="slider-controls" id="sliderDots" aria-label="Выбрать изображение">
+        <button class="dot active" aria-label="Слайд 1"></button>
+        <button class="dot" aria-label="Слайд 2"></button>
+        <button class="dot" aria-label="Слайд 3"></button>
+        <button class="dot" aria-label="Слайд 4"></button>
+        <button class="dot" aria-label="Слайд 5"></button>
+        <button class="dot" aria-label="Слайд 6"></button>
+      </div>
+    </section>
+
+    <section class="benefits">
+      <div><span class="benefit-icon">🥬</span><span><b>Свежие продукты</b><small>Собираем каждый день</small></span></div>
+      <div><span class="benefit-icon">🚜</span><span><b>От местных фермеров</b><small>Поддерживаем хозяйства</small></span></div>
+      <div><span class="benefit-icon">🍅</span><span><b>Натуральный вкус</b><small>Без лишних добавок</small></span></div>
+    </section>
+
+    <section class="section" id="catalog">
+      <div class="section-heading">
+        <div><span class="eyebrow">Что у нас есть</span><h2>Наша продукция</h2></div>
+        <a class="text-link" href="#contacts">Вся продукция →</a>
+      </div>
+      <div class="products">
+        <article class="product-card">
+          <div class="product-photo vegetables"></div>
+          <div class="product-info"><span class="product-tag">Сезонное</span><h3>Свежие овощи</h3><p>Томаты, огурцы, перец и зелень</p></div>
+        </article>
+        <article class="product-card">
+          <div class="product-photo fruits"></div>
+          <div class="product-info"><span class="product-tag">Сладкое и сочное</span><h3>Фрукты и ягоды</h3><p>Сочные плоды Астраханского края</p></div>
+        </article>
+        <article class="product-card">
+          <div class="product-photo dairy"></div>
+          <div class="product-info"><span class="product-tag">От фермы</span><h3>Молочные продукты</h3><p>Молоко, творог и домашняя сметана</p></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="about" id="about">
+      <div class="about-photo"></div>
+      <div class="about-content">
+        <span class="eyebrow">Наша история</span>
+        <h2>Растим с заботой.<br><em>Доставляем с душой.</em></h2>
+        <p>Farm Food — фермерская компания из Астраханской области. Мы объединяем местных производителей и покупателей, чтобы на вашем столе всегда были свежие и качественные продукты.</p>
+        <a class="btn btn-green" href="#contacts">Связаться с нами</a>
+      </div>
+    </section>
+
+    <section class="contact-strip" id="contacts">
+      <div><span class="eyebrow">Остались вопросы?</span><h2>Будем рады знакомству!</h2><p>Напишите нам, и мы расскажем о нашей продукции.</p></div>
+      <a class="btn btn-white" href="mailto:hello@farmfood.ru">Написать нам ↗</a>
+    </section>
+  </main>
+
+  <footer><a class="logo footer-logo" href="#home"><span class="logo-mark">🌱</span><span>farm<span class="logo-green">food</span><small>АСТРАХАНСКАЯ ФЕРМА</small></span></a><span>© 2026 Farm Food. Сделано с заботой о природе.</span></footer>
+
+  <div class="modal" id="loginModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-box">
+      <button class="modal-close" data-close aria-label="Закрыть">×</button>
+      <div class="modal-icon">🌿</div><span class="eyebrow">С возвращением</span>
+      <h2>Вход в аккаунт</h2><p class="modal-subtitle">Рады видеть вас снова!</p>
+      <form class="auth-form" id="loginForm">
+        <label>Электронная почта<input name="email" type="email" autocomplete="email" placeholder="name@example.com" required></label>
+        <label>Пароль<input name="password" type="password" autocomplete="current-password" placeholder="Введите пароль" minlength="6" required></label>
+        <button class="btn btn-green btn-large" type="submit">Войти</button>
+      </form>
+      <p class="switch-auth">Ещё нет аккаунта? <button data-switch="registerModal">Зарегистрироваться</button></p>
+      <p class="form-message" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div class="modal" id="registerModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-box">
+      <button class="modal-close" data-close aria-label="Закрыть">×</button>
+      <div class="modal-icon">🌱</div><span class="eyebrow">Присоединяйтесь</span>
+      <h2>Создать аккаунт</h2><p class="modal-subtitle">Это займёт всего пару минут</p>
+      <form class="auth-form" id="registerForm">
+        <label>Ваше имя<input name="name" type="text" autocomplete="name" placeholder="Как к вам обращаться?" required></label>
+        <label>Электронная почта<input name="email" type="email" autocomplete="email" placeholder="name@example.com" required></label>
+        <label>Телефон<input name="phone" type="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required></label>
+        <label>Пароль<input name="password" type="password" autocomplete="new-password" placeholder="Не менее 6 символов" minlength="8" required></label>
+        <button class="btn btn-green btn-large" type="submit">Зарегистрироваться</button>
+      </form>
+      <p class="switch-auth">Уже есть аккаунт? <button data-switch="loginModal">Войти</button></p>
+      <p class="form-message" aria-live="polite"></p>
+    </div>
+  </div>
+  <script src="script.js"></script>
+  <!-- Bootstrap JS bundle: модальные окна, меню и другие компоненты Bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
